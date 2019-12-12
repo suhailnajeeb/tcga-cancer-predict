@@ -8,7 +8,7 @@ labels = 'C:\Data\TCGA_phenotype_denseDataOnlyDownload.tsv'
 dbPath = 'C:\Data\data.h5'
 verbose = False
 
-print('Loading data ...')
+print('Loading data ... Patience.')
 df = pd.read_csv(data, sep='\t').transpose()
 
 print('Loading labels ...')
@@ -18,7 +18,6 @@ print('Housekeeping ...')
 df.columns = df.iloc[0]
 df = df.drop('Sample', axis = 0)
 
-labeldf.loc[name]
 labeldf = labeldf.set_index('sample')
 
 # dimensions: 10459 x 20530
@@ -26,8 +25,8 @@ labeldf = labeldf.set_index('sample')
 nTotal = df.shape(0)    #10459
 nFeat = df.shape(1)     #20530
 
-print('Total Number of samples:'+ str(nTotal))
-print('Features (RNASeq) per sample:' + str(nFeat))
+print('Total Number of samples: '+ str(nTotal))
+print('Features (RNASeq) per sample: ' + str(nFeat))
 
 print('Diseases to predict: ')
 
