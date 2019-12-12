@@ -22,8 +22,8 @@ labeldf = labeldf.set_index('sample')
 
 # dimensions: 10459 x 20530
 
-nTotal = df.shape(0)    #10459
-nFeat = df.shape(1)     #20530
+nTotal = df.shape[0]    #10459
+nFeat = df.shape[1]     #20530
 
 print('Total Number of samples: '+ str(nTotal))
 print('Features (RNASeq) per sample: ' + str(nFeat))
