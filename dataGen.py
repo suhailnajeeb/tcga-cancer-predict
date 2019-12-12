@@ -1,15 +1,20 @@
 import pandas as pd
 import h5py
 import numpy as np
-
+import progressbar
 
 data = 'C:\Data\HiSeqV2'
 labels = 'C:\Data\TCGA_phenotype_denseDataOnlyDownload.tsv'
 dbPath = 'C:\Data\data.h5'
+verbose = False
 
+print('Loading data ...')
 df = pd.read_csv(data, sep='\t').transpose()
+
+print('Loading labels ...')
 labeldf = pd.read_csv(labels, sep = '\t')
 
+print('Housekeeping ...')
 df.columns = df.iloc[0]
 df = df.drop('Sample', axis = 0)
 
@@ -21,7 +26,17 @@ labeldf = labeldf.set_index('sample')
 nTotal = df.shape(0)    #10459
 nFeat = df.shape(1)     #20530
 
-#diseases = labeldf._primary_disease.unique()
+print('Total Number of samples:'+ str(nTotal))
+print('Features (RNASeq) per sample:' + str(nFeat))
+
+print('Diseases to predict: ')
+
+diseases = labeldf._primary_disease.unique()
+
+for disease in diseases:
+    print(disease)
+
+# Defining Categorical values for each disease
 
 diseasedict = {
     'skin cutaneous melanoma':0, 'thyroid carcinoma':1, 'sarcoma':2,
@@ -42,19 +57,23 @@ diseasedict = {
     'adrenocortical cancer':32
 }
 
-
+print('Creating Database File at :' + dbPath)
 db = h5py.File(dbPath, mode = 'w')
 
+print('Setting up Database')
 db.create_dataset("name", (nTotal,), np.dtype('|S16'))
 db.create_dataset("RNASeq", (nTotal, nFeat), np.float32)
 db.create_dataset("label", (nTotal,), np.uint8)
 
 idx = 0
 
-for index,row in df.iterrows():
+print('Writing ' + str(nTotal) + ' samples to Dataset')
+
+for index,row in progressbar.progressbar(df.iterrows(), redirect_stdout=True):
     try:
         data = labeldf.loc[index]
-        print(index + '\t disease: \t' + str(diseasedict[data[2]]))
+        if(verbose):
+            print('Processing '+ str(idx) + ' of ' + str(nTotal) + ' : ' + index + '\t disease: \t' + str(data[2]))
         db["name"][idx] = np.asarray(index, dtype = np.dtype('|S16'))
         db["RNASeq"][idx] = np.asarray(row, dtype = np.float32)
         db["label"][idx] = np.uint8(diseasedict[data[2]])
