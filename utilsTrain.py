@@ -1,5 +1,8 @@
 import h5py
 import numpy as np
+from tensorflow.keras.utils import to_categorical
+
+# to test generator, values = next(generator) in code
 
 def generator(h5file, indexes, batch_size):
     X = []
@@ -10,8 +13,8 @@ def generator(h5file, indexes, batch_size):
             if(idx==0):
                 X = []
                 Y = []
-            RNA = h5file["RNASeq"][index]
-            label = h5file["label"][index]
+            RNA = np.expand_dims(h5file["RNASeq"][index], axis = 1)
+            label = to_categorical(h5file["label"][index], num_classes = 33, dtype = np.uint8)
             X.append(RNA)
             Y.append(label)
             idx = idx + 1
