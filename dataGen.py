@@ -56,7 +56,7 @@ diseasedict = {
     'adrenocortical cancer':32
 }
 
-print('Creating Database File at :' + dbPath)
+print('Creating Database File at : ' + dbPath)
 db = h5py.File(dbPath, mode = 'w')
 
 print('Setting up Database')
@@ -81,4 +81,6 @@ for index,row in progressbar.progressbar(df.iterrows(), redirect_stdout=True):
         print("Error: Cannot find label")
         continue
 
+print('Closing Database ..')
 db.close()
+print('Complete!')
