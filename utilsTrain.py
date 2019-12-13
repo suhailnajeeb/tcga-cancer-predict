@@ -1,8 +1,19 @@
 import h5py
 import numpy as np
 from tensorflow.keras.utils import to_categorical
+import os
 
 # to test generator, values = next(generator) in code
+
+def ensureDir(filePath):
+	
+	''' This function checks if the folder at filePath exists.
+		If not, it creates it. '''
+
+	directory = os.path.dirname(filePath)
+
+	if not os.path.exists(directory):
+		os.makedirs(directory)
 
 def generator(h5file, indexes, batch_size):
     X = []
