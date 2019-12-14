@@ -50,17 +50,19 @@ for train_index, test_index in skf.split(X, y):
     test_generator = generator(db, test_index, batch_size = 32)
 
     model = makeModel(modelName)
+    model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
+
 
     print("\nCross Validation Fold : %02d \n" % kdx)
 
     check1 = ModelCheckpoint(os.path.join(weightsFolder, modelName + "_fold_%02d" % kdx + "_{epoch:02d}-loss-{val_loss:.3f}.hdf5"), monitor='val_loss', save_best_only=True, mode='auto')
     check2 = ModelCheckpoint( bestModelPath, monitor='val_loss', save_best_only=True, mode='auto')
-    check3 = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=int(options.patience), verbose=0, mode='auto')
+    check3 = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=int(patience), verbose=0, mode='auto')
     check4 = CSVLogger(os.path.join(modelFolder, modelName + '_trainingLog.csv'), separator=',', append=True)
-    check5 = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=int(options.patience), verbose=1, mode='auto', epsilon=0.0001, cooldown=0, min_lr=1e-10)
+    check5 = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=int(patience), verbose=1, mode='auto', epsilon=0.0001, cooldown=0, min_lr=1e-10)
 
-    trained_model=model.fit_generator(train_generator, steps_per_epoch=(len(X_train) // batchSize), epochs=epochs, initial_epoch=epochStart,
-											validation_data=test_generator, validation_steps=(len(X_test) // batchSize), callbacks=[check1, check2, check3, check4, check5],
+    trained_model=model.fit_generator(train_generator, steps_per_epoch=(len(train_index) // batchSize), epochs=epochs, initial_epoch=epochStart,
+											validation_data=test_generator, validation_steps=(len(test_index) // batchSize), callbacks=[check1, check2, check3, check4, check5],
 											verbose=1)
 
 db.close()
