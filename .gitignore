@@ -132,3 +132,7 @@ dmypy.json
 
 *.h5
 *.hdf5
+
+# ignore folders
+/model/*
+/weights/*
