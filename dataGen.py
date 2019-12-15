@@ -2,10 +2,13 @@ import pandas as pd
 import h5py
 import numpy as np
 import progressbar
+from labelMapping import diseasedict
 
-data = 'C:\Data\HiSeqV2'
-labels = 'C:\Data\TCGA_phenotype_denseDataOnlyDownload.tsv'
-dbPath = 'C:\Data\data.h5'
+data = '../data/HiSeqV2'
+labels = '../data/TCGA_phenotype_denseDataOnlyDownload.tsv'
+dbPath = '../data/HiSeqV2.h5'
+inputDim2D = True
+inputDim = (116, 177)       # nFeat = 20351 = padded bottom = 20532 = 116 x 177
 verbose = False
 
 print('Loading data ... Patience.')
@@ -35,33 +38,15 @@ diseases = labeldf._primary_disease.unique()
 for disease in diseases:
     print(disease)
 
-# Defining Categorical values for each disease
-
-diseasedict = {
-    'skin cutaneous melanoma':0, 'thyroid carcinoma':1, 'sarcoma':2,
-    'prostate adenocarcinoma':3, 'pheochromocytoma & paraganglioma':4,
-    'pancreatic adenocarcinoma':5, 'head & neck squamous cell carcinoma':6,
-    'esophageal carcinoma':7, 'colon adenocarcinoma':8,
-    'cervical & endocervical cancer':9, 'breast invasive carcinoma':10,
-    'bladder urothelial carcinoma':11, 'testicular germ cell tumor':12,
-    'kidney papillary cell carcinoma':13, 'kidney clear cell carcinoma':14,
-    'acute myeloid leukemia':15, 'rectum adenocarcinoma':16,
-    'ovarian serous cystadenocarcinoma':17, 'lung adenocarcinoma':18,
-    'liver hepatocellular carcinoma':19,
-    'uterine corpus endometrioid carcinoma':20, 'glioblastoma multiforme':21,
-    'brain lower grade glioma':22, 'uterine carcinosarcoma':23, 'thymoma':24,
-    'stomach adenocarcinoma':25, 'diffuse large B-cell lymphoma':26,
-    'lung squamous cell carcinoma':27, 'mesothelioma':28,
-    'kidney chromophobe':29, 'uveal melanoma':30, 'cholangiocarcinoma':31,
-    'adrenocortical cancer':32
-}
-
 print('Creating Database File at : ' + dbPath)
 db = h5py.File(dbPath, mode = 'w')
 
 print('Setting up Database')
 db.create_dataset("name", (nTotal,), np.dtype('|S16'))
-db.create_dataset("RNASeq", (nTotal, nFeat), np.float32)
+if inputDim2D:
+    db.create_dataset("RNASeq", (nTotal,) + inputDim, np.float32)
+else:
+    db.create_dataset("RNASeq", (nTotal, nFeat), np.float32)
 db.create_dataset("label", (nTotal,), np.uint8)
 
 idx = 0
@@ -74,11 +59,18 @@ for index,row in progressbar.progressbar(df.iterrows(), redirect_stdout=True):
         if(verbose):
             print('Processing '+ str(idx) + ' of ' + str(nTotal) + ' : ' + index + '\t disease: \t' + str(data[2]))
         db["name"][idx] = np.asarray(index, dtype = np.dtype('|S16'))
-        db["RNASeq"][idx] = np.asarray(row, dtype = np.float32)
+        if inputDim2D:
+            row = np.asarray(row, dtype=np.float32)
+            row = np.append(row, np.array([0.0, 0.0])) # 0 padding at the end to make length 20532
+            db["RNASeq"][idx] = np.reshape(row, inputDim)
+        else:
+            db["RNASeq"][idx] = np.asarray(row, dtype = np.float32)
+
         db["label"][idx] = np.uint8(diseasedict[data[2]])
         idx = idx + 1
-    except:
-        print("Error: Cannot find label")
+    except Exception as err:
+        print("Error: ", err)
+        # print("Error: Cannot find label")
         continue
 
 print('Closing Database ..')
