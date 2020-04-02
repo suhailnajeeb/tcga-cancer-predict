@@ -60,3 +60,5 @@ trained_model=model.fit_generator(train_generator, steps_per_epoch=(len(X_train)
 											verbose=1)
 
 db.close()
+
+

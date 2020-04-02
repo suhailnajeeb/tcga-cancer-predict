@@ -17,7 +17,7 @@ set_session(tf.Session(config = config))
 dbPath = 'C:\Data\data.h5'
 
 weightsFolder = 'weights\\'
-modelName = 'CNN1D_001'
+modelName = 'CNN1D_003'
 bestModelPath = 'weights\\best.hdf5'
 modelFolder = 'model\\'
 
@@ -25,7 +25,7 @@ ensureDir(weightsFolder)
 ensureDir(modelFolder)
 ensureDir(os.path.join(weightsFolder,modelName))
 
-epochs = 15
+epochs = 20
 epochStart = 0
 patience = 50
 batchSize = 32
@@ -40,7 +40,7 @@ n_classes = 33
 X = np.arange(nTotal)
 y = db["label"][...]
 
-skf = StratifiedKFold(n_splits = 4)
+skf = StratifiedKFold(n_splits = 5)
 skf.get_n_splits(X,y)
 
 kdx = 0
@@ -58,7 +58,7 @@ for train_index, test_index in skf.split(X, y):
     check1 = ModelCheckpoint(os.path.join(weightsFolder, modelName + "_fold_%02d" % kdx + "_{epoch:02d}-loss-{val_loss:.3f}.hdf5"), monitor='val_loss', save_best_only=True, mode='auto')
     check2 = ModelCheckpoint( bestModelPath, monitor='val_loss', save_best_only=True, mode='auto')
     check3 = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=int(patience), verbose=0, mode='auto')
-    check4 = CSVLogger(os.path.join(modelFolder, modelName + '_trainingLog.csv'), separator=',', append=True)
+    check4 = CSVLogger(os.path.join(modelFolder, modelName + '_fold_trainingLog.csv'), separator=',', append=True)
     check5 = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=int(patience), verbose=1, mode='auto', epsilon=0.0001, cooldown=0, min_lr=1e-10)
 
     trained_model=model.fit_generator(train_generator, steps_per_epoch=(len(train_index) // batchSize), epochs=epochs, initial_epoch=epochStart,
