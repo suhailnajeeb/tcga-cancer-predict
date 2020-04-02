@@ -34,24 +34,6 @@ def CNN1D_001(nFeat = 20530, nClasses = 33):
     return model
 
 @addModel
-<<<<<<< HEAD
-def CNN1D_002(nFeat = 20530, n_classes = 33):
-    input = Input(shape = (nFeat,1))
-
-    x1 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (input)
-    x2 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x1)
-    x3 = Dropout(0.5)(x2)
-    x4 = MaxPooling1D(pool_size = 2)(x3)
-    x5 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x4)
-    x6 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x5)
-    x7 = Dropout(0.5)(x6)
-    x8 = MaxPooling1D(pool_size = 2)(x7)
-    x9 = Flatten()(x8)
-    x10 = Dense(100, activation = 'relu')(x9)
-    out = Dense(n_classes, activation = 'softmax')(x10)
-
-    model = Model(inputs = input, outputs = out)
-=======
 def DilatedCNN2D_001(inputDim=(116, 177, 1), nClasses=33, perms=100):
 
     def bn_block(x):
@@ -90,31 +72,10 @@ def DilatedCNN2D_001(inputDim=(116, 177, 1), nClasses=33, perms=100):
     o = Dense(nClasses, activation='softmax')(x)
 
     model = Model(inputs=i, outputs=o)
->>>>>>> fe8041958fb5682b224864eda7dda04418402331
 
     return model
 
 @addModel
-<<<<<<< HEAD
-def CNN1D_003(nFeat = 20530, n_classes = 33):
-    input = Input(shape = (nFeat,1))
-    x0 = Dense(100, activation = 'relu')(input)
-    x1 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (input)
-    x2 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x1)
-    x3 = Dropout(0.5)(x2)
-    x4 = MaxPooling1D(pool_size = 2)(x3)
-    x5 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x4)
-    x6 = Conv1D(filters = 64, kernel_size = 3, activation = 'relu') (x5)
-    x7 = Dropout(0.5)(x6)
-    x8 = MaxPooling1D(pool_size = 2)(x7)
-    x9 = Flatten()(x8)
-    x10 = Dense(100, activation = 'relu')(x9)
-    out = Dense(n_classes, activation = 'softmax')(x10)
-
-    model = Model(inputs = input, outputs = out)
-
-    return model
-=======
 def DilatedCNN2D_002(inputDim=(116, 177, 1), nClasses=33, perms=100):
 
     def bn_block(x):
@@ -159,4 +120,3 @@ def DilatedCNN2D_002(inputDim=(116, 177, 1), nClasses=33, perms=100):
 if __name__ == "__main__":
     m = DilatedCNN2D_002()
     print(m.summary(line_width=150))
->>>>>>> fe8041958fb5682b224864eda7dda04418402331
