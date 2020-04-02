@@ -74,8 +74,3 @@ trained_model=model.fit_generator(train_generator,
 								verbose=1)
 
 db.close()
-<<<<<<< HEAD
-
-
-=======
->>>>>>> fe8041958fb5682b224864eda7dda04418402331
