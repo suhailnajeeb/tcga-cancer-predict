@@ -4,9 +4,9 @@ import numpy as np
 import progressbar
 from labelMapping import diseasedict
 
-data = '../data/HiSeqV2'
-labels = '../data/TCGA_phenotype_denseDataOnlyDownload.tsv'
-dbPath = '../data/HiSeqV2.h5'
+data = 'C:/Data/HiSeqV2'
+labels = 'C:/Data/TCGA_phenotype_denseDataOnlyDownload.tsv'
+dbPath = 'E:/Data/HiSeqV2.h5'
 inputDim2D = True
 inputDim = (116, 177)       # nFeat = 20351 = padded bottom = 20532 = 116 x 177
 verbose = False
