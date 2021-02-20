@@ -46,7 +46,7 @@ Similar to the one dimensional network, two dimensional convolutional neural net
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2dcnn_model.jpg"><br>
-    Gene Expression Values 116 x 177 Grid
+    2D CNN Model
 </p>
 
 # Results and Analysis
