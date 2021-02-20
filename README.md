@@ -35,3 +35,22 @@ We first developed a 1D Convolutional Neural Network to fit the RNASeq data. Sin
 
 The model was trained using the Adam optimizer for 20 epochs, using dropout and learning rate reduction when plateaus were reached in the validation loss. The final model was trained using stratified k-fold cross validation. The accuracy of the model was found 94.9% over the 5 folds. 
 
+# 2D Convolutional Neural Network Architecture
+
+Similar to the one dimensional network, two dimensional convolutional neural networks employ a 2D kernel (typically 3 by 3) over two dimensional input data. As such, the expression levels for the different genes were arranged in a 2D grid 116 wide, and 177 long. A sample reshaped in this way is shown below. The gene array was zero padded once at the beginning and once at the end to make this reshaping possible ( 116 x 177 = 20350 + 2 ). No particular arrangement was followed other than that the genes were arranged in row major order, being sorted by their alphabetical names first. 
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2d_gene_array.jpg">
+</p>
+
+# Results and Analysis
+
+The final dilated 2D CNN model was able to classify unseen samples in the test fold at a categorical accuracy of 95.6 averaged over the 5 folds.
+
+Class Activation Maps were used to analyze the output of the convolutional models and to rank the importance of different input features, namely the expression levels of the different genes, in the model's ability to classify the phenotype correctly. In order to generate the activation maps, samples from thee training data were passed through the trained model and via the guided back-propagation algorithm, a map showing regions in the input (i.e the activation map) that maximally activated the penultimate layer in the model (before global pooling) were generated. This was done for 100 input samples for each phenotype and the activation maps were averaged. This gave us the locations in the input array that had the most affect on the output of the model. This in turn correlated to the importance of presence of different genes for particular phenotypes. Some examples of the activation maps obtained are shown below:
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2dcnn_cam.jpg">
+</p>
+
+Our analysis on the TCGA pan-cancer data proves that modern deep learning techniques work exceptionally well on genomic data and can robustly classify cancer types from RNA Sequencing of tumorous cells. At the same time, class activation maps found from the 2D CNNs for various diseases provide valuable insight on the genes which are responsible for the particular cancer. Our research suggests that both 1D and 2D convnets can be used to robustly classify and also study the effect of different genes.
