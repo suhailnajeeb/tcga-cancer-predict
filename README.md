@@ -49,7 +49,7 @@ Similar to the one dimensional network, two dimensional convolutional neural net
     2D CNN Model
 </p>
 
-# Results and Analysis
+# Results
 
 The final dilated 2D CNN model was able to classify unseen samples in the test fold at a categorical accuracy of 95.6 averaged over the 5 folds.
 
