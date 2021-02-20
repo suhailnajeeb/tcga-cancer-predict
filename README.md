@@ -40,7 +40,13 @@ The model was trained using the Adam optimizer for 20 epochs, using dropout and 
 Similar to the one dimensional network, two dimensional convolutional neural networks employ a 2D kernel (typically 3 by 3) over two dimensional input data. As such, the expression levels for the different genes were arranged in a 2D grid 116 wide, and 177 long. A sample reshaped in this way is shown below. The gene array was zero padded once at the beginning and once at the end to make this reshaping possible ( 116 x 177 = 20350 + 2 ). No particular arrangement was followed other than that the genes were arranged in row major order, being sorted by their alphabetical names first. 
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2d_gene_array.jpg">
+    <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2d_gene_array.jpg"><br>
+    Gene Expression Values 116 x 177 Grid
+</p>
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/suhailnajeeb/tcga-cancer-predict/master/images/2dcnn_model.jpg"><br>
+    Gene Expression Values 116 x 177 Grid
 </p>
 
 # Results and Analysis
